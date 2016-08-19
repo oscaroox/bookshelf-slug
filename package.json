@@ -1,0 +1,38 @@
+{
+  "name": "bookshelf-slug",
+  "version": "0.1.0",
+  "description": "Bookshelfjs plugin to generate unique slugs",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./test/test.js",
+    "knex": "knex --knexfile ./test/database/knexfile.js",
+    "migrate": "npm run knex -- migrate:latest",
+    "seed": "npm run knex -- seed:run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oscaroox/bookshelf-slug.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oscaroox/bookshelf-slug/issues"
+  },
+  "keywords": [
+    "bookshelf",
+    "bookshelf-plugin",
+    "slug",
+    "bookshelf-slug",
+    "orm"
+  ],
+  "author": "oscar druiventak",
+  "license": "MIT",
+  "devDependencies": {
+    "bookshelf": "^0.10.0",
+    "chai": "^3.5.0",
+    "knex": "^0.11.10",
+    "mocha": "^3.0.2",
+    "sqlite3": "^3.1.4"
+  },
+  "dependencies": {
+    "slug": "^0.9.1"
+  }
+}
