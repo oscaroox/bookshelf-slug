@@ -1,6 +1,6 @@
 {
   "name": "bookshelf-slug",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Bookshelfjs plugin to generate unique slugs",
   "main": "index.js",
   "scripts": {
