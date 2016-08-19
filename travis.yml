@@ -2,13 +2,3 @@ language: node_js
 node_js:
 - '4.4'
 - '5.6'
-
-services:
-- mysql
-
-before_script:
-- mysql -u root -e 'create database slug;'
-
-script:
-- npm run migrate
-- npm run test
