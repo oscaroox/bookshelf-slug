@@ -1,11 +1,11 @@
 'use strict';
 let bookshelf = require('../').bookshelf;
-let User = require('./User');
+ require('./User');
 
-module.exports = bookshelf.Model.extend({
+module.exports = bookshelf.model('Post', {
   tableName: 'post',
   slug: ['title', 'description'],
   user: function() {
-    this.belgongsTo(User);
+    return this.belongsTo('User');
   }
 });

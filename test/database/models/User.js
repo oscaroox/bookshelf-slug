@@ -1,13 +1,14 @@
 'use strict';
 let bookshelf = require('../').bookshelf;
-let Post = require('./Post');
-module.exports = bookshelf.Model.extend({
+require('./Post.js');
+
+module.exports = bookshelf.model('User', {
   tableName: 'user',
   slug: {
     column: 'uniqueName',
     items: ['firstName', 'lastName', 'nickName']
   },
   post: function() {
-    return this.hasMany(Post);
+    return this.hasMany('Post');
   }
 });
