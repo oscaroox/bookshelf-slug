@@ -7,7 +7,7 @@ Automatically generate slugs for your models
 ### Installation
 
 ```javascript
-let knex = require('knex')(require('./knexfile.js') || 'development')
+let knex = require('knex')(require('./knexfile.js'))
 let bookshelf = require('bookshelf')(knex)
 
 // Add the plugin
