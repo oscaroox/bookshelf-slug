@@ -16,6 +16,7 @@ describe('bookshelf-slug', () => {
       .then(model => done())
       .catch(err => done(err));
   })
+
   it('should create a post with a unique slug, with default column name: slug', (done) => {
     new Post({
       user_id: 1,
@@ -31,7 +32,24 @@ describe('bookshelf-slug', () => {
       expect(model.get('slug')).to.equal('fancy-cats-with-hats-this-is-a-funny-post-about-cats-with-hats')
       done();
     }).catch(err => done(err))
+  });
 
+  it('should create a post with a unique slug, even if the post has a default ID assigned', (done) => {
+    const id = 42;
+    const post = new Post({
+      user_id: 1,
+      title: 'Crocodiles',
+      description: 'See you later, alligator',
+      content: 'Alligators are not crocodiles',
+      posted_on: new Date(),
+      updated_on: new Date()
+    });
+    post.defaults = {id: 42};
+    post.save()
+    .then(function(model) {
+      expect(model.get('slug')).to.equal('crocodiles-see-you-later-alligator')
+      done();
+    }).catch(err => done(err))
   });
 
   it('should update a existing post with a unique slug, with default column name: slug', (done) => {
@@ -70,6 +88,7 @@ describe('bookshelf-slug', () => {
         done();
       })
   });
+
   it('should create a unique slug with existing slug sources', function(done){
     User.forge({
       firstName: 'Dolan',
