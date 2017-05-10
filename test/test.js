@@ -44,10 +44,11 @@ describe('bookshelf-slug', () => {
       posted_on: new Date(),
       updated_on: new Date()
     });
-    post.defaults = {id: 42};
+    post.defaults = {id: id};
     post.save()
     .then(function(model) {
       expect(model.get('slug')).to.equal('crocodiles-see-you-later-alligator')
+      expect(model.get('id')).to.equal(id)
       done();
     }).catch(err => done(err))
   });
