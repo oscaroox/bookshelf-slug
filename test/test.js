@@ -7,12 +7,17 @@ let knex = require('./database').knex;
 let bookshelf = require('./database').bookshelf;
 let Promise = require('bluebird');
 
+
 describe('bookshelf-slug', () => {
   let postId;
   let userId;
   before(() => {
     return knex.raw("delete from post")
       .then(() => knex.raw("delete from user"))
+  })
+
+  after(() => {
+    return knex.destroy();
   })
 
   it('should create a post with a unique slug, with default column name: slug', (done) => {
