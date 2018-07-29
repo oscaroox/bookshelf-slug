@@ -5,13 +5,17 @@ import slugify from "slugify";
 interface SlugOption {
   column: string;
   items: string[];
-  idAttribute: string;
 }
 
 export default function bookshelfSlug(bookshelf: Bookshelf): void {
   bookshelf.Model = bookshelf.Model.extend({
-    __slug: {},
-    __transacting: null,
+    __transacting: undefined,
+
+    slugOptions: {
+      column: "",
+      items: []
+    },
+
     slug: undefined,
 
     constructor() {
@@ -20,20 +24,14 @@ export default function bookshelfSlug(bookshelf: Bookshelf): void {
         return;
       }
 
-      let slug: SlugOption = {
-        column: "",
-        items: [],
-        idAttribute: this.idAttribute
-      };
-
       if (Array.isArray(this.slug)) {
         if (this.slug.length < 1) {
           throw new Error(
             "slug property should contain atleast one value in array"
           );
         }
-        slug.column = "slug";
-        slug.items = this.slug;
+        this.slugOptions.column = "slug";
+        this.slugOptions.items = this.slug;
       } else if (!Array.isArray(this.slug)) {
         if (!this.slug.column || !this.slug.items) {
           throw new Error(
@@ -44,67 +42,86 @@ export default function bookshelfSlug(bookshelf: Bookshelf): void {
             "items property should atleast contain one value in array"
           );
         }
-        slug = {
-          ...slug,
-          ...this.slug
-        };
+
+        this.slugOptions = this.slug;
       }
 
-      this.on("saving", (model: Bookshelf.Model<any>, attrs: {}, opts: {}) => {
-        return activate(bookshelf.Model, slug, model, attrs, opts);
-      });
+      this.on("saving", this.activateSlugPlugin.bind(this));
+    },
+
+    async activateSlugPlugin(
+      model: Bookshelf.Model<any>,
+      attrs: {},
+      options: { transacting?: Transaction }
+    ) {
+      const slugOptions: SlugOption = this.slugOptions;
+      const fields = slugOptions.items;
+      const idAttribute = this.idAttribute;
+      this.__transacting = options && options.transacting;
+
+      if (!model.isNew()) {
+        let changed = false;
+        for (const field of fields) {
+          if (attrs.hasOwnProperty(field)) {
+            changed = true;
+          }
+        }
+
+        if (!changed) {
+          return;
+        }
+
+        const res = await new (this.constructor as typeof Bookshelf.Model)({
+          [idAttribute]: model.get(idAttribute)
+        }).fetch({
+          transacting: this.__transacting
+        });
+
+        const changedValues = Object.assign({}, res ? res.toJSON() : {}, attrs);
+        const newSlug = this.generateSlug(model, changedValues);
+        return this.setSlug(newSlug);
+      }
+
+      const slugValue: string = this.generateSlug();
+
+      return this.setSlug(slugValue);
+    },
+
+    async setSlug(value: string) {
+      const isUnique: boolean = this.checkSlug(value);
+      const slugOptions: SlugOption = this.slugOptions;
+
+      if (isUnique) {
+        return this.set(slugOptions.column, value);
+      }
+
+      const newSlug = `${value}-${Date.now()}`;
+
+      return this.setSlug(newSlug);
+    },
+
+    generateSlug(changed?: any) {
+      const values = (this.slugOptions as SlugOption).items
+        .map(field => {
+          if (changed && changed[field]) {
+            return changed[field];
+          }
+          return this.get(field);
+        })
+        .join(" ");
+
+      return slugify(values, { lower: true });
+    },
+
+    async checkSlug(slugToCheck: string): Promise<boolean> {
+      const Model: typeof Bookshelf.Model = this.constructor;
+      const slugOptions: SlugOption = this.slugOptions;
+
+      const entity = await new Model()
+        .where(slugOptions.column, slugToCheck)
+        .fetch({ transacting: this.__transacting });
+
+      return entity === null || entity === undefined;
     }
   }) as typeof Bookshelf.Model;
-}
-
-async function activate(
-  bookshelf: typeof Bookshelf.Model,
-  slug: SlugOption,
-  model: Bookshelf.Model<any>,
-  attrs: {},
-  options: { transacting?: Transaction }
-) {
-  const fields = slug.items;
-  const idAttribute = slug.idAttribute;
-  const column = slug.column;
-  const transacting = options && options.transacting;
-
-  if (!model.isNew()) {
-    let changed = false;
-    for (const field of fields) {
-      if (attrs.hasOwnProperty(field)) {
-        changed = true;
-      }
-    }
-
-    if (!changed) {
-      return;
-    }
-
-    const res = await new bookshelf({
-      [idAttribute]: model.get(idAttribute)
-    }).fetch({
-      transacting
-    });
-
-    const changedValues = Object.assign({}, res ? res.toJSON() : {}, attrs);
-    const newSlug = generateSlug(slug, model, changedValues);
-  }
-}
-
-function generateSlug(
-  slug: SlugOption,
-  model: Bookshelf.Model<any>,
-  changed: any
-) {
-  const values = slug.items
-    .map(field => {
-      if (changed && changed[field]) {
-        return changed[field];
-      }
-      return model.get(field);
-    })
-    .join(" ");
-
-  return slugify(values, { lower: true });
 }
