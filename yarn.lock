@@ -2,6 +2,43 @@
 # yarn lockfile v1
 
 
+"@types/bluebird@*":
+  version "3.5.23"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.23.tgz#e805da976b76892b2b2e50eec29e84914c730670"
+
+"@types/bookshelf@^0.9.9":
+  version "0.9.9"
+  resolved "https://registry.yarnpkg.com/@types/bookshelf/-/bookshelf-0.9.9.tgz#9e1427f7e1dd81dc7f38f0a9bbab987136570a0d"
+  dependencies:
+    "@types/bluebird" "*"
+    "@types/create-error" "*"
+    "@types/knex" "*"
+    "@types/lodash" "*"
+
+"@types/create-error@*":
+  version "0.3.30"
+  resolved "https://registry.yarnpkg.com/@types/create-error/-/create-error-0.3.30.tgz#dc692a2b0a5d70d85dbf01fef2f6d41232255df3"
+
+"@types/events@*":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
+
+"@types/knex@*":
+  version "0.14.18"
+  resolved "https://registry.yarnpkg.com/@types/knex/-/knex-0.14.18.tgz#bca62bb0f5e3aef9bcec105607b2e9c10bed5307"
+  dependencies:
+    "@types/bluebird" "*"
+    "@types/events" "*"
+    "@types/node" "*"
+
+"@types/lodash@*":
+  version "4.14.115"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.115.tgz#54d171b2ce12c058742443b5f6754760f701b8f9"
+
+"@types/node@*":
+  version "10.5.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.4.tgz#6eccc158504357d1da91434d75e86acde94bb10b"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"

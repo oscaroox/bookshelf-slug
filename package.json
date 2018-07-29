@@ -38,5 +38,8 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.14.0",
     "typescript": "^2.9.2"
+  },
+  "peerDependencies": {
+    "@types/bookshelf": "^0.9.9"
   }
 }
