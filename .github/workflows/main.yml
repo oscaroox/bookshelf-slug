@@ -5,7 +5,7 @@ name: Main workflow
 
 on:
   release:
-    types: [created]
+    types: [push]
 
 jobs:
   build:
