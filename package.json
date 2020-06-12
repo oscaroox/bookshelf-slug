@@ -26,14 +26,17 @@
   "author": "oscar druiventak",
   "license": "MIT",
   "devDependencies": {
-    "bookshelf": "^0.13.3",
+    "bluebird": "^3.4.1",
+    "bookshelf": "^1.0.0",
     "chai": "^4.1.2",
-    "knex": "^0.15.2",
+    "knex": "^0.19.2",
     "mocha": "^5.2.0",
     "sqlite3": "^4.2.0"
   },
   "dependencies": {
-    "bluebird": "^3.4.1",
     "slug": "^0.9.1"
+  },
+  "peerDependencies": {
+    "bookshelf": ">= 1.0.0 < 1.3"
   }
 }
