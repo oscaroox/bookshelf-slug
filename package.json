@@ -35,5 +35,8 @@
   },
   "dependencies": {
     "slug": "^0.9.1"
+  },
+  "peerDependencies": {
+    "bookshelf": ">= 1.0.0 < 1.3"
   }
 }
