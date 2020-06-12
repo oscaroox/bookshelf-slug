@@ -1,6 +1,5 @@
 # bookshelf-slug
-[![Build Status](https://travis-ci.org/oscaroox/bookshelf-slug.svg?branch=master)](https://travis-ci.org/oscaroox/bookshelf-slug.svg?branch=master)
-
+![Main workflow](https://github.com/oscaroox/bookshelf-slug/workflows/Main%20workflow/badge.svg)
 
 Automatically generate slugs for your models
 
