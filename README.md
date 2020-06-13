@@ -3,7 +3,17 @@
 
 Automatically generate slugs for your models
 
-### Installation
+### Requirements
+- Bookshelfjs 1.x
+- Nodejs 10.x, 12.x
+
+### Install
+```bash
+npm install bookshelf-slug
+```
+
+
+### Setup
 
 ```javascript
 let knex = require('knex')(require('./knexfile.js'))
@@ -38,12 +48,4 @@ let User = bookshelf.Model.extend({
  .then(model => {
   console.log(model.get('slug')) // theodore-douglas-theo
  })
-```
-
-### Testing
-
-```bash
-git@github.com:oscaroox/bookshelf-slug.git
-cd bookshelf-slug
-npm install && npm test
 ```
