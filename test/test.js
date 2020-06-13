@@ -23,15 +23,6 @@ describe('bookshelf-slug', () => {
     beforeEach(async () => await knex.raw("delete from articles"));
 
     it('will append date if slug is already taken', async () => {
-      await new Article({
-        title: 'The best news',
-        slug: 'the-best-news',
-      }).save();
-
-      expect(await Article.where({ slug: 'the-best-news' }).count()).to.equal(1);
-    });
-
-    it('will append date if slug is already taken', async () => {
       const first_article = await new Article({
         title: 'The best news',
         slug: 'the-best-news',

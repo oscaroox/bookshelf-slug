@@ -32,11 +32,11 @@ let User = bookshelf.Model.extend({
  User.forge({
   firstName: 'Theodore',
   lastName: 'Douglas',
-  nickName: 'One true god'
+  nickName: 'theo'
  })
  .save()
  .then(model => {
-  console.log(model.get('slug')) // theodore-douglas-one-true-god
+  console.log(model.get('slug')) // theodore-douglas-theo
  })
 ```
 
