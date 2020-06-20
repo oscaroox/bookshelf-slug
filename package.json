@@ -34,7 +34,7 @@
     "sqlite3": "^4.2.0"
   },
   "dependencies": {
-    "slug": "^0.9.1"
+    "slug": "^3.3.0"
   },
   "peerDependencies": {
     "bookshelf": ">= 1.0.0 < 1.3"
