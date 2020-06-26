@@ -4,6 +4,7 @@ let bookshelf = require('../').bookshelf;
 
 module.exports = bookshelf.model('Post', {
   tableName: 'post',
+  requireFetch: false,
   slug: ['title', 'description'],
   user: function() {
     return this.belongsTo('User');

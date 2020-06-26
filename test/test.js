@@ -1,12 +1,10 @@
 'use strict';
 let chai = require('chai');
 let expect = chai.expect;
-let Post = require('./database/models/Post');
-let User = require('./database/models/User');
 let knex = require('./database').knex;
 let bookshelf = require('./database').bookshelf;
 let Promise = require('bluebird');
-
+let { Post, User, Article } = require('./database/models');
 
 describe('bookshelf-slug', () => {
   let postId;
@@ -14,11 +12,55 @@ describe('bookshelf-slug', () => {
   before(() => {
     return knex.raw("delete from post")
       .then(() => knex.raw("delete from user"))
+      .then(() => knex.raw("delete from articles"))
   })
 
   after(() => {
     return knex.destroy();
   })
+
+  describe('unique values', () => {
+    beforeEach(async () => await knex.raw("delete from articles"));
+
+    it('will append date if slug is already taken', async () => {
+      const first_article = await new Article({
+        title: 'The best news',
+        slug: 'the-best-news',
+      }).save();
+
+      const second_article = await new Article({
+        title: 'The best news',
+        slug: 'the-best-news',
+      }).save();
+
+      expect(await Article.where({ slug: 'the-best-news' }).count()).to.equal(1);
+      expect(second_article.get('slug')).to.not.equal(first_article.get('slug'));
+    });
+
+    it('will not update slug without changes', async () => {
+      const first_article = await new Article({
+        title: 'The best news',
+        slug: 'the-best-news',
+      }).save();
+
+      expect(first_article.get('slug')).to.equal('the-best-news');
+      await first_article.save();
+      expect(first_article.get('slug')).to.equal('the-best-news');
+    });
+
+    it('will update slug when field has changed', async () => {
+      const article = await new Article({
+        title: 'The best news',
+        slug: 'the-best-news',
+      }).save();
+
+      expect(article.get('slug')).to.equal('the-best-news');
+
+      article.set('title', 'The next best news');
+      await article.save();
+      expect(article.get('slug')).to.equal('the-next-best-news');
+    });
+  });
 
   it('should create a post with a unique slug, with default column name: slug', (done) => {
     new Post({
