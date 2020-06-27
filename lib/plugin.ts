@@ -2,7 +2,7 @@ import { SlugModel, SlugOption, KnexTransaction, Mappable } from "./interfaces";
 import Bookshelf from "bookshelf";
 import slugify from "slugify";
 
-export default function bookshelfSlug(bookshelf: Bookshelf): void {
+export function bookshelfSlugPlugin(bookshelf: Bookshelf): void {
   const proto = bookshelf.Model.prototype;
   bookshelf.Model = bookshelf.Model.extend({
     __transacting: undefined,
@@ -36,8 +36,8 @@ export default function bookshelfSlug(bookshelf: Bookshelf): void {
     async activateSlugPlugin(
       this: SlugModel,
       model: Bookshelf.Model<any>,
-      attrs: {},
-      options: { transacting?: KnexTransaction },
+      attrs: Mappable,
+      options: { transacting?: KnexTransaction }
     ) {
       const slugOptions: SlugOption = this.slugOptions;
       const fields = slugOptions.items;
@@ -47,7 +47,7 @@ export default function bookshelfSlug(bookshelf: Bookshelf): void {
       if (!model.isNew()) {
         let changed = false;
         for (const field of fields) {
-          if (attrs.hasOwnProperty(field)) {
+          if (model.hasChanged(field)) {
             changed = true;
           }
         }
@@ -59,23 +59,23 @@ export default function bookshelfSlug(bookshelf: Bookshelf): void {
         const res = await new (this.constructor as typeof Bookshelf.Model)({
           [idAttribute]: model.get(idAttribute),
         }).fetch({
-          transacting: transacting,
+          transacting,
         });
 
         const changedValues = Object.assign({}, res ? res.toJSON() : {}, attrs);
         const newSlug = this.generateSlug(changedValues);
-        return this.setSlug(newSlug);
+        return this.setSlug(newSlug, transacting);
       }
 
       const slugValue: string = this.generateSlug();
 
-      return this.setSlug(slugValue);
+      return this.setSlug(slugValue, transacting);
     },
 
     async setSlug(
       this: SlugModel,
       value: string,
-      transacting: KnexTransaction,
+      transacting?: KnexTransaction
     ) {
       const isUnique: boolean = await this.checkSlug(value, transacting);
       const slugOptions: SlugOption = this.slugOptions;
@@ -86,7 +86,7 @@ export default function bookshelfSlug(bookshelf: Bookshelf): void {
 
       const newSlug = `${value}-${Date.now()}`;
 
-      return this.setSlug(newSlug);
+      return this.setSlug(newSlug, transacting);
     },
 
     generateSlug(this: SlugModel, changed?: Mappable) {
@@ -105,7 +105,7 @@ export default function bookshelfSlug(bookshelf: Bookshelf): void {
     async checkSlug(
       this: SlugModel,
       slugToCheck: string,
-      transacting?: KnexTransaction,
+      transacting?: KnexTransaction
     ): Promise<boolean> {
       const Model = this.constructor as typeof Bookshelf.Model;
 

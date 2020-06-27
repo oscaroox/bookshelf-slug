@@ -6,10 +6,11 @@ import Bookshelf from "bookshelf";
 let expect = chai.expect;
 
 describe("bookshelf-slug", () => {
-  let postId;
-  let userId;
+  let postId: number;
+  let userId: number;
   before(() => {
-    return knex.raw("delete from post")
+    return knex
+      .raw("delete from post")
       .then(() => knex.raw("delete from user"))
       .then(() => knex.raw("delete from articles"));
   });
@@ -33,13 +34,12 @@ describe("bookshelf-slug", () => {
       }).save();
 
       expect(
-        await Article.where<Bookshelf.Model<any>>({ slug: "the-best-news" })
-          .count(),
-      ).to.equal(
-        1,
-      );
+        await Article.where<Bookshelf.Model<any>>({
+          slug: "the-best-news",
+        }).count()
+      ).to.equal(1);
       expect(second_article.get("slug")).to.not.equal(
-        first_article.get("slug"),
+        first_article.get("slug")
       );
     });
 
@@ -68,9 +68,7 @@ describe("bookshelf-slug", () => {
     });
   });
 
-  it("should create a post with a unique slug, with default column name: slug", (
-    done,
-  ) => {
+  it("should create a post with a unique slug, with default column name: slug", (done) => {
     new Post({
       user_id: 1,
       title: "Fancy cats with hats",
@@ -83,15 +81,14 @@ describe("bookshelf-slug", () => {
       .then(function (model) {
         postId = model.get("id");
         expect(model.get("slug")).to.equal(
-          "fancy-cats-with-hats-this-is-a-funny-post-about-cats-with-hats",
+          "fancy-cats-with-hats-this-is-a-funny-post-about-cats-with-hats"
         );
         done();
-      }).catch((err) => done(err));
+      })
+      .catch((err) => done(err));
   });
 
-  it("should create a post with a unique slug, even if the post has a default ID assigned", (
-    done,
-  ) => {
+  it("should create a post with a unique slug, even if the post has a default ID assigned", (done) => {
     const id = 42;
     const post = new Post({
       user_id: 1,
@@ -102,34 +99,32 @@ describe("bookshelf-slug", () => {
       updated_on: new Date(),
     });
     (post as any).defaults = { id };
-    post.save()
+    post
+      .save()
       .then(function (model) {
         expect(model.get("slug")).to.equal(
-          "crocodiles-see-you-later-alligator",
+          "crocodiles-see-you-later-alligator"
         );
         expect(model.get("id")).to.equal(id);
         done();
-      }).catch((err) => done(err));
+      })
+      .catch((err) => done(err));
   });
 
-  it("should update a existing post with a unique slug, with default column name: slug", (
-    done,
-  ) => {
+  it("should update a existing post with a unique slug, with default column name: slug", (done) => {
     Post.forge<Bookshelf.Model<any>>({ id: postId })
       .save({
         description: "Post with pictures of dogs",
       })
       .then((model) => {
         expect(model.get("slug")).to.equal(
-          "fancy-cats-with-hats-post-with-pictures-of-dogs",
+          "fancy-cats-with-hats-post-with-pictures-of-dogs"
         );
         done();
       });
   });
 
-  it("should create a new user with a unique slug, with specified column name: uniqueName", (
-    done,
-  ) => {
+  it("should create a new user with a unique slug, with specified column name: uniqueName", (done) => {
     User.forge<Bookshelf.Model<any>>({
       firstName: "Donald",
       lastName: "Duck",
@@ -144,9 +139,7 @@ describe("bookshelf-slug", () => {
       });
   });
 
-  it("should update a existing user with a unique slug, with specified column name: uniqueName", (
-    done,
-  ) => {
+  it("should update a existing user with a unique slug, with specified column name: uniqueName", (done) => {
     User.forge<Bookshelf.Model<any>>({ id: userId })
       .save({
         firstName: "Dolan",
@@ -171,58 +164,57 @@ describe("bookshelf-slug", () => {
       });
   });
 
-  let posts = [{
-    title: "Rediscover New York ",
-    description: "Dive deep into the unkown parts of New York",
-    content: "Long content",
-  }, {
-    title: "Hiking through Europe",
-    description: "Hiking through Europe",
-    content: "Europe content bla",
-  }, {
-    title: "Walking dead season 7 reveal",
-    description: "Previously on the walking dead",
-    content: "walking dead content",
-  }];
+  let posts = [
+    {
+      title: "Rediscover New York ",
+      description: "Dive deep into the unkown parts of New York",
+      content: "Long content",
+    },
+    {
+      title: "Hiking through Europe",
+      description: "Hiking through Europe",
+      content: "Europe content bla",
+    },
+    {
+      title: "Walking dead season 7 reveal",
+      description: "Previously on the walking dead",
+      content: "walking dead content",
+    },
+  ];
 
-  it("should work with transactions", function (done) {
-    bookshelf.transaction((t) => {
-      return User.forge<Bookshelf.Model<any>>({
-        firstName: "Theodore",
-        lastName: "Douglas",
-        nickName: "One true god",
-        dob: new Date(),
-      })
-        .save(null, { transacting: t })
-        .tap((model) => {
-          expect(model.get("uniqueName")).to.equal(
-            "theodore-douglas-one-true-god",
+  it("should work with transactions", function () {
+    return bookshelf.transaction(async (t) => {
+      const user: Bookshelf.Model<any> = await User.forge<Bookshelf.Model<any>>(
+        {
+          firstName: "Theodore",
+          lastName: "Douglas",
+          nickName: "One true god",
+          dob: new Date(),
+        }
+      ).save(undefined, { transacting: t });
+
+      expect(user.get("uniqueName")).to.equal("theodore-douglas-one-true-god");
+
+      await Promise.all(
+        posts.map((post) => {
+          return Post.forge<Bookshelf.Model<any>>(post).save(
+            { user_id: user.get("id") },
+            { transacting: t }
           );
+        })
+      );
 
-          return posts.map((post) => {
-            return Post.forge<Bookshelf.Model<any>>(post).save(
-              { "user_id": model.get("id") },
-              { transacting: t },
-            );
-          });
-        });
-    }).then((model) => {
-      return model
+      let userPosts: Bookshelf.Collection<any> = await user
         .related("post")
-        .fetch()
-        .then(function (posts) {
-          posts = posts.pluck("slug");
-          expect(posts).to.include(
-            "rediscover-new-york-dive-deep-into-the-unkown-parts-of-new-york",
-          );
-          expect(posts).to.include(
-            "hiking-through-europe-hiking-through-europe",
-          );
-          expect(posts).to.include(
-            "walking-dead-season-7-reveal-previously-on-the-walking-dead",
-          );
-          done();
-        });
+        .fetch({ transacting: t });
+      const slugs = userPosts.pluck("slug");
+      expect(slugs).to.include(
+        "rediscover-new-york-dive-deep-into-the-unkown-parts-of-new-york"
+      );
+      expect(slugs).to.include("hiking-through-europe-hiking-through-europe");
+      expect(slugs).to.include(
+        "walking-dead-season-7-reveal-previously-on-the-walking-dead"
+      );
     });
   });
 });

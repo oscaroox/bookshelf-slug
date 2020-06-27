@@ -2,11 +2,11 @@
   "name": "bookshelf-slug",
   "version": "1.0.1",
   "description": "Bookshelfjs plugin to generate unique slugs",
-  "main": "index.js",
+  "main": "build/plugin.js",
   "scripts": {
-    "test": "mocha ./test/test.js",
-    "test:ts": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.test.ts'",
-    "knex": "knex --knexfile ./test/database/knexfile.js",
+    "test": "mocha -r ts-node/register 'test/**/*.test.ts'",
+    "build": "rimraf build && tsc",
+    "knex": "knex --knexfile ./test/database/knexfile.ts",
     "migrate": "npm run knex -- migrate:latest",
     "seed": "npm run knex -- seed:run"
   },
@@ -31,16 +31,18 @@
     "@types/chai": "^4.2.11",
     "@types/knex": "^0.16.1",
     "@types/mocha": "^7.0.2",
+    "@types/node": "^14.0.14",
     "bluebird": "^3.4.1",
     "bookshelf": "^1.0.0",
     "chai": "^4.1.2",
     "knex": "^0.21.1",
     "mocha": "^8.0.1",
+    "rimraf": "^3.0.2",
     "sqlite3": "^4.2.0",
-    "ts-node": "^8.10.2"
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
   },
   "dependencies": {
-    "slug": "^3.3.0",
     "slugify": "^1.4.2"
   },
   "peerDependencies": {

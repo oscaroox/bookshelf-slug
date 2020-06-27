@@ -1,4 +1,4 @@
-export default {
+const knexConfig = {
   client: "sqlite3",
   connection: {
     filename: __dirname + "/db.sqlite",
@@ -8,3 +8,6 @@ export default {
     directory: __dirname + "/migrations",
   },
 };
+
+export default knexConfig;
+module.exports = knexConfig;

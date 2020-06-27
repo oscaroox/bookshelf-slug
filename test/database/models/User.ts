@@ -1,5 +1,5 @@
 import { bookshelf } from "..";
-
+// import "./Post";
 // require("./Post.js");
 
 export default bookshelf.model("User", {
@@ -9,7 +9,7 @@ export default bookshelf.model("User", {
     column: "uniqueName",
     items: ["firstName", "lastName", "nickName"],
   },
-  post: function () {
+  post: function (this: any) {
     return this.hasMany("Post");
   },
 });
