@@ -16,7 +16,7 @@ export type SlugModel = Bookshelf.Model<any> & {
   activateSlugPlugin(
     model: Bookshelf.Model<any>,
     attrs: {},
-    options: { transacting?: KnexTransaction }
+    options: { transacting?: KnexTransaction },
   ): any;
   generateSlug(changedValue?: Mappable): string;
   setSlug(value: string, transacting?: KnexTransaction): Promise<string>;
