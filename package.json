@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/test.js",
+    "test:ts": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.test.ts'",
     "knex": "knex --knexfile ./test/database/knexfile.js",
     "migrate": "npm run knex -- migrate:latest",
     "seed": "npm run knex -- seed:run"
@@ -26,15 +27,21 @@
   "author": "oscar druiventak",
   "license": "MIT",
   "devDependencies": {
+    "@types/bookshelf": "^1.1.1",
+    "@types/chai": "^4.2.11",
+    "@types/knex": "^0.16.1",
+    "@types/mocha": "^7.0.2",
     "bluebird": "^3.4.1",
     "bookshelf": "^1.0.0",
     "chai": "^4.1.2",
     "knex": "^0.21.1",
     "mocha": "^8.0.1",
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^4.2.0",
+    "ts-node": "^8.10.2"
   },
   "dependencies": {
-    "slug": "^3.3.0"
+    "slug": "^3.3.0",
+    "slugify": "^1.4.2"
   },
   "peerDependencies": {
     "bookshelf": ">= 1.0.0 < 1.3"

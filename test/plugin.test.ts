@@ -1,7 +1,7 @@
-"use strict";
 import chai from "chai";
 import { knex, bookshelf } from "./database";
 import { Post, User, Article } from "./database/models";
+import Bookshelf from "bookshelf";
 
 let expect = chai.expect;
 
@@ -32,7 +32,10 @@ describe("bookshelf-slug", () => {
         slug: "the-best-news",
       }).save();
 
-      expect(await Article.where({ slug: "the-best-news" }).count()).to.equal(
+      expect(
+        await Article.where<Bookshelf.Model<any>>({ slug: "the-best-news" })
+          .count(),
+      ).to.equal(
         1,
       );
       expect(second_article.get("slug")).to.not.equal(
@@ -98,7 +101,7 @@ describe("bookshelf-slug", () => {
       posted_on: new Date(),
       updated_on: new Date(),
     });
-    post.defaults = { id: id };
+    (post as any).defaults = { id };
     post.save()
       .then(function (model) {
         expect(model.get("slug")).to.equal(
@@ -112,7 +115,7 @@ describe("bookshelf-slug", () => {
   it("should update a existing post with a unique slug, with default column name: slug", (
     done,
   ) => {
-    Post.forge({ id: postId })
+    Post.forge<Bookshelf.Model<any>>({ id: postId })
       .save({
         description: "Post with pictures of dogs",
       })
@@ -124,8 +127,10 @@ describe("bookshelf-slug", () => {
       });
   });
 
-  it("should create a new user with a unique slug, with specified column name: uniqueName", (done) => {
-    User.forge({
+  it("should create a new user with a unique slug, with specified column name: uniqueName", (
+    done,
+  ) => {
+    User.forge<Bookshelf.Model<any>>({
       firstName: "Donald",
       lastName: "Duck",
       nickName: "The duck",
@@ -142,7 +147,7 @@ describe("bookshelf-slug", () => {
   it("should update a existing user with a unique slug, with specified column name: uniqueName", (
     done,
   ) => {
-    User.forge({ id: userId })
+    User.forge<Bookshelf.Model<any>>({ id: userId })
       .save({
         firstName: "Dolan",
       })
@@ -153,7 +158,7 @@ describe("bookshelf-slug", () => {
   });
 
   it("should create a unique slug with existing slug sources", function (done) {
-    User.forge({
+    User.forge<Bookshelf.Model<any>>({
       firstName: "Dolan",
       lastName: "Duck",
       nickName: "The duck",
@@ -182,7 +187,7 @@ describe("bookshelf-slug", () => {
 
   it("should work with transactions", function (done) {
     bookshelf.transaction((t) => {
-      return User.forge({
+      return User.forge<Bookshelf.Model<any>>({
         firstName: "Theodore",
         lastName: "Douglas",
         nickName: "One true god",
@@ -193,8 +198,9 @@ describe("bookshelf-slug", () => {
           expect(model.get("uniqueName")).to.equal(
             "theodore-douglas-one-true-god",
           );
-          return Promise.map(posts, (post) => {
-            return Post.forge(post).save(
+
+          return posts.map((post) => {
+            return Post.forge<Bookshelf.Model<any>>(post).save(
               { "user_id": model.get("id") },
               { transacting: t },
             );
