@@ -1,11 +1,17 @@
-import { SlugModel, SlugOption, KnexTransaction, Mappable } from "./interfaces";
+import {
+  SlugModel,
+  SlugOption,
+  KnexTransaction,
+  Mappable,
+  SlugifySettings,
+} from "./interfaces";
 import Bookshelf from "bookshelf";
 import slugify from "slugify";
 
-export const bookshelfSlugPlugin = (slugSettings = {}) =>
+export const bookshelfSlugPlugin = (slugSettings: SlugifySettings = {}) =>
   (bookshelf: Bookshelf) => {
     const proto = bookshelf.Model.prototype;
-    const slugifySettings = { lower: true, ...slugSettings };
+    const slugifySettings: SlugifySettings = { lower: true, ...slugSettings };
     bookshelf.Model = bookshelf.Model.extend({
       __transacting: undefined,
 

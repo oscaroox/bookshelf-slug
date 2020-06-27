@@ -1,11 +1,19 @@
 import Bookshelf from "bookshelf";
 
-export interface SlugOption {
+export type SlugOption = {
   column: string;
   items: string[];
   unique: boolean;
   update: boolean;
-}
+};
+
+export type SlugifySettings = {
+  replacement?: string;
+  remove?: RegExp;
+  lower?: boolean;
+  strict?: boolean;
+};
+
 export type KnexTransaction = Bookshelf.SyncOptions["transacting"];
 
 export type Mappable = { [k: string]: string };
