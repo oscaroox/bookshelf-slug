@@ -13,8 +13,6 @@ export const bookshelfSlugPlugin = (slugSettings: SlugifySettings = {}) =>
     const proto = bookshelf.Model.prototype;
     const slugifySettings: SlugifySettings = { lower: true, ...slugSettings };
     bookshelf.Model = bookshelf.Model.extend({
-      __transacting: undefined,
-
       slugOptions: {
         column: "",
         items: [],
