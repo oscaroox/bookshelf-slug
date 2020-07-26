@@ -58,8 +58,8 @@ describe("bookshelf-slug settings", () => {
       });
 
       const title = "Title++^^*!'@";
-      const description = "apple orange";
-      const expectedSlug = "Title;apple;orange";
+      const description = "Apple Orange";
+      const expectedSlug = "Title;Apple;Orange";
 
       const post = await new Post({
         title,
