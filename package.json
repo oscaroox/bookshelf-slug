@@ -8,8 +8,7 @@
     "test": "npm run mocha 'test/**/*.spec.ts'",
     "build": "rimraf build && tsc -p tsconfig.build.json",
     "knex": "knex --knexfile ./test/database/knexfile.ts",
-    "migrate": "npm run knex -- migrate:latest",
-    "seed": "npm run knex -- seed:run"
+    "migrate": "npm run knex -- migrate:latest"
   },
   "repository": {
     "type": "git",
