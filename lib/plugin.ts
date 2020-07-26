@@ -8,14 +8,14 @@ import {
 import Bookshelf from "bookshelf";
 import slugify from "slugify";
 
-export const bookshelfSlugPlugin = (slugSettings: PluginSettings = {}) => (
+const defaultGenerator = () => Date.now().toString(10);
+
+export const bookshelfSlugPlugin = (pluginSettings: PluginSettings = {}) => (
   bookshelf: Bookshelf
 ) => {
   const proto = bookshelf.Model.prototype;
-
-  let generateId = () => Date.now().toString(10);
-
-  if (slugSettings.generateId) generateId = slugSettings.generateId;
+  const generateId = pluginSettings.generateId || defaultGenerator;
+  const { generateId: _, ...slugSettings } = pluginSettings;
 
   const slugifySettings: PluginSettings = {
     lower: true,
