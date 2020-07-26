@@ -4,8 +4,9 @@
   "description": "Bookshelfjs plugin to generate unique slugs",
   "main": "build/plugin.js",
   "scripts": {
-    "test": "mocha -r ts-node/register 'test/**/*.test.ts'",
-    "build": "rimraf build && tsc",
+    "mocha": "mocha -r ts-node/register --file ./test/hooks/teardown.ts --file ./test/hooks/setup.ts",
+    "test": "npm run mocha 'test/**/*.spec.ts'",
+    "build": "rimraf build && tsc -p tsconfig.build.json",
     "knex": "knex --knexfile ./test/database/knexfile.ts",
     "migrate": "npm run knex -- migrate:latest",
     "seed": "npm run knex -- seed:run"
@@ -29,12 +30,14 @@
   "devDependencies": {
     "@types/bookshelf": "^1.1.1",
     "@types/chai": "^4.2.11",
+    "@types/faker": "^4.1.12",
     "@types/knex": "^0.16.1",
-    "@types/mocha": "^7.0.2",
+    "@types/mocha": "^8.0.0",
     "@types/node": "^14.0.14",
     "bluebird": "^3.4.1",
     "bookshelf": "^1.0.0",
     "chai": "^4.1.2",
+    "faker": "^4.1.0",
     "knex": "^0.21.1",
     "mocha": "^8.0.1",
     "rimraf": "^3.0.2",
