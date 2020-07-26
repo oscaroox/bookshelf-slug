@@ -6,7 +6,6 @@ export function up(knex: Knex) {
     table.string("lastName").notNullable();
     table.string("nickName").notNullable();
     table.dateTime("dob").notNullable();
-    table.string("uniqueName").notNullable().unique();
   });
 }
 
