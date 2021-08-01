@@ -31,7 +31,7 @@
     "@types/chai": "^4.2.11",
     "@types/faker": "^4.1.12",
     "@types/knex": "^0.16.1",
-    "@types/mocha": "^8.0.0",
+    "@types/mocha": "^9.0.0",
     "@types/node": "^14.0.14",
     "bluebird": "^3.4.1",
     "bookshelf": "^1.0.0",
