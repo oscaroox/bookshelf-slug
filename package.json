@@ -29,7 +29,7 @@
   "devDependencies": {
     "@types/bookshelf": "^1.1.1",
     "@types/chai": "^4.2.11",
-    "@types/faker": "^5.5.7",
+    "@types/faker": "^6.6.9",
     "@types/knex": "^0.16.1",
     "@types/mocha": "^8.0.0",
     "@types/node": "^16.4.9",
