@@ -32,7 +32,7 @@
     "@types/faker": "^5.5.7",
     "@types/knex": "^0.16.1",
     "@types/mocha": "^8.0.0",
-    "@types/node": "^16.4.9",
+    "@types/node": "^18.0.0",
     "bluebird": "^3.4.1",
     "bookshelf": "^1.0.0",
     "chai": "^4.1.2",
